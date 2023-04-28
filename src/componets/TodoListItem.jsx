@@ -1,13 +1,22 @@
-import React from "react";
+import React,{ useState} from "react";
 import { ACTIONS } from "../constants/constant101";
+import Editfild from "../componets/Editfild"
+import edit from "../assets/images/edit-light.png";
 
 function TodoListItem({ data, dispatch }) {
-  function toggle_complete(e) {
+  const [editMode,setEditMode]=useState(false);
+
+  function toggle_complete() {
     dispatch({ type: ACTIONS.TOGGELE_COMPLETE, payload: { ID: data.id } });
   }
 
-  function delete_todo(e) {
+  function delete_todo() {
     dispatch({ type: ACTIONS.DELETE_TODO, payload: { ID: data.id } });
+  }
+
+  function edit_todo() {
+    setEditMode((edit)=>!edit)
+    {console.log(editMode)}
   }
 
   return (
@@ -33,16 +42,19 @@ function TodoListItem({ data, dispatch }) {
             </svg>
           )}
         </button>
-        <div
-          className={`flex  ${
+        <p
+          className={`flex px-4 ${
             data.Complited
               ? "line-through text-Light-Light-Grayish-Blue dark:text-Dark-Dark-Grayish-Blue"
               : " text-Light-Very-Dark-Grayish-Blue dark:text-Dark-Light-Grayish-Blue"
           }`}
         >
-          {`${data.task}`}
-        </div>
+          {editMode ? <Editfild data={data} toggle={edit_todo}/>: `${data.task}`}
+        </p>
       </div>
+      <button onClick={edit_todo}>
+        <img src={edit} alt="edit" />
+      </button>
       <button onClick={delete_todo}>
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
           <path

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ACTIONS } from "./constants/constant101";
+import { ACTIONS, FILTERS } from "./constants/constant101";
 import TodoListItem from "./componets/TodoListItem";
 import { ThemeContext } from "./contexts/ThemeContext";
 import bgDesktopDark from "./assets/images/bg-desktop-dark.jpg";
@@ -12,16 +12,50 @@ import { useTodo } from "./hooks/useContextData";
 function App() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const { todoData, dispatch } = useTodo();
-  let active = "All";
+  const [activeFilter, setActiveFilter] = useState(FILTERS.ALL);
 
   function displayTodo() {
-    return todoData.map((data, i) => {
-      return (
-        <div key={i}>
-          <TodoListItem data={data} dispatch={dispatch} />
-        </div>
-      );
-    });
+     
+     if(activeFilter===FILTERS.ACTVE){
+      return todoData.filter((t) => {
+        return t.Complited === false;
+      }).map((data, i) => {
+        return (
+          <div key={i}>
+            <TodoListItem data={data} dispatch={dispatch} />
+          </div>
+        );
+      })
+     }
+     if(activeFilter===FILTERS.COMPLITED){
+      
+        return todoData.filter((t) => {
+          return t.Complited === true;
+        }).map((data, i) => {
+          return (
+            <div key={i}>
+              <TodoListItem data={data} dispatch={dispatch} />
+            </div>
+          );
+        })
+     }else{
+      return todoData.map((data, i) => {
+        return (
+          <div key={i}>
+            <TodoListItem data={data} dispatch={dispatch} />
+          </div>
+        );
+      })
+     }
+      
+  }
+
+  function filter(selectedFilter) {
+    setActiveFilter(selectedFilter);
+  }
+
+  function deleteAllComplitedTodos() {
+    dispatch({ type: ACTIONS.CLEAR_COMPLETE, payload: "" });
   }
 
   return (
@@ -78,13 +112,14 @@ function App() {
               <div className="text-Light-Dark-Grayish-Blue dark:text-Dark-Dark-Grayish-Blue font-[JosefinSans-regular]">
                 <Inputfild />
                 <div className="w-full rounded-lg overflow-hidden divide-y divide-Light-Dark-Grayish-Blue dark:divide-Dark-Dark-Grayish-Blue">
-                  {displayTodo()}
+                  { displayTodo()}
                   <div className="flex justify-between items-center w-full h-12 bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue  px-6">
-                    <div className="">5 items left</div>
+                    <div className="">{todoData.length} items left</div>
                     <div className="hidden md:flex space-x-4 font-bold">
                       <button
+                      onClick={()=>filter(FILTERS.ALL)}
                         className={`${
-                          active === "All"
+                          activeFilter === FILTERS.ALL
                             ? "text-Primary-Primary-regal-blue"
                             : ""
                         } hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
@@ -92,8 +127,9 @@ function App() {
                         All
                       </button>
                       <button
+                      onClick={()=>filter(FILTERS.ACTVE)}
                         className={`${
-                          active === "Active"
+                          activeFilter === FILTERS.ACTVE
                             ? "text-Primary-Primary-regal-blue"
                             : ""
                         } hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
@@ -101,8 +137,9 @@ function App() {
                         Active{" "}
                       </button>
                       <button
+                      onClick={()=>filter(FILTERS.COMPLITED)}
                         className={`${
-                          active === "Completed"
+                          activeFilter === FILTERS.COMPLITED
                             ? "text-Primary-Primary-regal-blue"
                             : ""
                         }  hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
@@ -110,22 +147,29 @@ function App() {
                         Completed
                       </button>
                     </div>
-                    <div className="hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer">
+                    <div
+                      onClick={deleteAllComplitedTodos}
+                      className="hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer"
+                    >
                       Clear Completed
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center justify-center md:hidden bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue  rounded-lg h-12 mt-4 font-bold">
                   <button
+                   onClick={()=>filter(FILTERS.ALL)}
                     className={`${
-                      active === "All" ? "text-Primary-Primary-regal-blue" : ""
+                      activeFilter === FILTERS.ALL
+                        ? "text-Primary-Primary-regal-blue"
+                        : ""
                     } mx-4 hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
                   >
                     All
                   </button>
                   <button
+                   onClick={()=>filter(FILTERS.ACTVE)}
                     className={`${
-                      active === "Active"
+                      activeFilter === FILTERS.ACTVE
                         ? "text-Primary-Primary-regal-blue"
                         : ""
                     } mx-4 hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
@@ -133,8 +177,9 @@ function App() {
                     Active{" "}
                   </button>
                   <button
+                   onClick={()=>filter(FILTERS.COMPLITED)}
                     className={`${
-                      active === "Completed"
+                      activeFilter === FILTERS.COMPLITED
                         ? "text-Primary-Primary-regal-blue"
                         : ""
                     } mx-4 hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}

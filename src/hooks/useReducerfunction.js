@@ -7,7 +7,15 @@ export function TodoReducer(todo, action) {
     case ACTIONS.ADD_TODO:
       return [...todo, newTodo(action.payload.newTask)];
     case ACTIONS.EDIT_TODO:
-      return [];
+      return todo.map((t) => {
+        if (t.id === action.payload.ID) {
+          {
+            console.log("todo with " + t.id + " was edited");
+          }
+          return { ...t, task: action.payload.newTask };
+        }
+        return t;
+      });
     case ACTIONS.DELETE_TODO:
       return todo.filter((t) => {
         return t.id !== action.payload.ID;
@@ -22,10 +30,10 @@ export function TodoReducer(todo, action) {
         }
         return t;
       });
-    case ACTIONS.FILTER_COMPLETE:
-      return [];
-    case ACTIONS.FILTER_ALL:
-      return [];
+    case ACTIONS.CLEAR_COMPLETE:
+      return todo.filter((t) => {
+        return t.Complited !== true;
+      });
     default:
       return todo;
   }
