@@ -1,14 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { ACTIONS } from "./constants/constant101";
 import TodoListItem from "./componets/TodoListItem";
 import { ThemeContext } from "./contexts/ThemeContext";
 import bgDesktopDark from "./assets/images/bg-desktop-dark.jpg";
 import bgDesktopLight from "./assets/images/bg-desktop-light.jpg";
 import bgMobileDark from "./assets/images/bg-mobile-dark.jpg";
 import bgMobileLight from "./assets/images/bg-mobile-light.jpg";
+import Inputfild from "./componets/Inputfild";
+import { useTodo } from "./hooks/useContextData";
 
 function App() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const { todoData, dispatch } = useTodo();
   let active = "All";
+
+  function addTodo() {
+    dispatch({ type: ACTIONS.ADD_TODO });
+  }
+
   return (
     <div className={`${isDarkMode ? "dark" : " "}`}>
       <div className="flex flex-col items-center min-h-screen w-full bg-Light-Very-Light-Grayish-Blue dark:bg-Dark-Very-Dark-Blue">
@@ -31,6 +40,7 @@ function App() {
                 <div className="tracking-[1rem] uppercase font-bold text-4xl md:text-5xl">
                   TODO
                 </div>
+                <button onClick={addTodo}>add to local storage</button>
                 <button className="" onClick={toggleTheme}>
                   {isDarkMode ? (
                     <svg
@@ -60,43 +70,9 @@ function App() {
                 </button>
               </div>
               <div className="text-Light-Dark-Grayish-Blue dark:text-Dark-Dark-Grayish-Blue font-[JosefinSans-regular]">
-                <input
-                  className="h-16 w-full rounded-lg my-5 md:my-8 bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue text-Light-Very-Dark-Grayish-Blue dark:text-Dark-Light-Grayish-Blue px-6"
-                  type="text"
-                />
+                <Inputfild />
                 <div className="w-full rounded-lg overflow-hidden divide-y divide-Light-Dark-Grayish-Blue dark:divide-Dark-Dark-Grayish-Blue">
-                  {[
-                    {
-                      id: "1",
-                      task: "Finish the by friday lunch time 1",
-                      Complited: true,
-                    },
-                    {
-                      id: "2",
-                      task: "Finish the by friday lunch time 2",
-                      Complited: false,
-                    },
-                    {
-                      id: "3",
-                      task: "Finish the by friday lunch time 3",
-                      Complited: false,
-                    },
-                    {
-                      id: "4",
-                      task: "Finish the by friday lunch time 4",
-                      Complited: false,
-                    },
-                    {
-                      id: "5",
-                      task: "Finish the by friday lunch time 5",
-                      Complited: false,
-                    },
-                    {
-                      id: "6",
-                      task: "Finish the by friday lunch time 6",
-                      Complited: false,
-                    },
-                  ].map((data, i) => {
+                  {todoData.map((data, i) => {
                     return (
                       <div key={i}>
                         <TodoListItem data={data} />

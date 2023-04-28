@@ -1,6 +1,10 @@
 export const ACTIONS = {
-  INCREMENT: "incriment",
-  DECRIMENT: "decriment",
+  ADD_TODO: "Add-todo",
+  EDIT_TODO: "Edit-todo",
+  DELETE_TODO: "Detete-todo",
+  TOGGELE_COMPLITE: "Detete-todo",
+  FILTER_COMPLETE: "Detete-todo",
+  FILTER_ALL: "Detete-todo",
 };
 
 export const LANGUAGE_LIST = {
@@ -9,25 +13,6 @@ export const LANGUAGE_LIST = {
 };
 
 export const LANGUAGE = {
-  ENGLISH: {
-    LANGUAGESElECTOR: "Languge:",
-    NAVMENU: [
-      { path: "/", title: "Home" },
-      { path: "/services", title: "Service" },
-      { path: "/projects", title: "Projects" },
-      { path: "/contact", title: "Contact" },
-      { path: "/about", title: "About" },
-    ],
-    SECTIONS: ["Hero", "Service", "Content", "About", "Footer"],
-  },
-  AMHARIC: {
-    LANGUAGESElECTOR: "ቃንቃ:",
-    NAVMENU: [
-      { path: "/", title: "ሆም" },
-      { path: "/services", title: "አገልግሎት" },
-      { path: "/projects", title: "ፕሮገክት" },
-      { path: "/about", title: "ሰለኛ" },
-    ],
-    SECTIONS: ["ሂሮ", "አገልግሎት", "ገኑኝነት", "ሰለኛ", "ፉተር"],
-  },
+  ENGLISH: {},
+  AMHARIC: {},
 };
