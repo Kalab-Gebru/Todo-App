@@ -14,8 +14,14 @@ function App() {
   const { todoData, dispatch } = useTodo();
   let active = "All";
 
-  function addTodo() {
-    dispatch({ type: ACTIONS.ADD_TODO });
+  function displayTodo() {
+    return todoData.map((data, i) => {
+      return (
+        <div key={i}>
+          <TodoListItem data={data} dispatch={dispatch} />
+        </div>
+      );
+    });
   }
 
   return (
@@ -40,7 +46,7 @@ function App() {
                 <div className="tracking-[1rem] uppercase font-bold text-4xl md:text-5xl">
                   TODO
                 </div>
-                <button onClick={addTodo}>add to local storage</button>
+                {/* <button onClick={}>add to local storage</button> */}
                 <button className="" onClick={toggleTheme}>
                   {isDarkMode ? (
                     <svg
@@ -72,13 +78,7 @@ function App() {
               <div className="text-Light-Dark-Grayish-Blue dark:text-Dark-Dark-Grayish-Blue font-[JosefinSans-regular]">
                 <Inputfild />
                 <div className="w-full rounded-lg overflow-hidden divide-y divide-Light-Dark-Grayish-Blue dark:divide-Dark-Dark-Grayish-Blue">
-                  {todoData.map((data, i) => {
-                    return (
-                      <div key={i}>
-                        <TodoListItem data={data} />
-                      </div>
-                    );
-                  })}
+                  {displayTodo()}
                   <div className="flex justify-between items-center w-full h-12 bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue  px-6">
                     <div className="">5 items left</div>
                     <div className="hidden md:flex space-x-4 font-bold">
