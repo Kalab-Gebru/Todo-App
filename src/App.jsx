@@ -15,39 +15,40 @@ function App() {
   const [activeFilter, setActiveFilter] = useState(FILTERS.ALL);
 
   function displayTodo() {
-     
-     if(activeFilter===FILTERS.ACTVE){
-      return todoData.filter((t) => {
-        return t.Complited === false;
-      }).map((data, i) => {
-        return (
-          <div key={i}>
-            <TodoListItem data={data} dispatch={dispatch} />
-          </div>
-        );
-      })
-     }
-     if(activeFilter===FILTERS.COMPLITED){
-      
-        return todoData.filter((t) => {
-          return t.Complited === true;
-        }).map((data, i) => {
+    if (activeFilter === FILTERS.ACTVE) {
+      return todoData
+        .filter((t) => {
+          return t.Complited === false;
+        })
+        .map((data, i) => {
           return (
             <div key={i}>
               <TodoListItem data={data} dispatch={dispatch} />
             </div>
           );
+        });
+    }
+    if (activeFilter === FILTERS.COMPLITED) {
+      return todoData
+        .filter((t) => {
+          return t.Complited === true;
         })
-     }else{
+        .map((data, i) => {
+          return (
+            <div key={i}>
+              <TodoListItem data={data} dispatch={dispatch} />
+            </div>
+          );
+        });
+    } else {
       return todoData.map((data, i) => {
         return (
           <div key={i}>
             <TodoListItem data={data} dispatch={dispatch} />
           </div>
         );
-      })
-     }
-      
+      });
+    }
   }
 
   function filter(selectedFilter) {
@@ -112,81 +113,90 @@ function App() {
               <div className="text-Light-Dark-Grayish-Blue dark:text-Dark-Dark-Grayish-Blue font-[JosefinSans-regular]">
                 <Inputfild />
                 <div className="w-full rounded-lg overflow-hidden divide-y divide-Light-Dark-Grayish-Blue dark:divide-Dark-Dark-Grayish-Blue">
-                  { displayTodo()}
-                  <div className="flex justify-between items-center w-full h-12 bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue  px-6">
-                    <div className="">{todoData.length} items left</div>
-                    <div className="hidden md:flex space-x-4 font-bold">
-                      <button
-                      onClick={()=>filter(FILTERS.ALL)}
-                        className={`${
-                          activeFilter === FILTERS.ALL
-                            ? "text-Primary-Primary-regal-blue"
-                            : ""
-                        } hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
-                      >
-                        All
-                      </button>
-                      <button
-                      onClick={()=>filter(FILTERS.ACTVE)}
-                        className={`${
-                          activeFilter === FILTERS.ACTVE
-                            ? "text-Primary-Primary-regal-blue"
-                            : ""
-                        } hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
-                      >
-                        Active{" "}
-                      </button>
-                      <button
-                      onClick={()=>filter(FILTERS.COMPLITED)}
-                        className={`${
-                          activeFilter === FILTERS.COMPLITED
-                            ? "text-Primary-Primary-regal-blue"
-                            : ""
-                        }  hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
-                      >
-                        Completed
-                      </button>
-                    </div>
-                    <div
-                      onClick={deleteAllComplitedTodos}
-                      className="hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer"
-                    >
-                      Clear Completed
-                    </div>
+                  <div
+                    id="style-7"
+                    className="overflow-y-scroll scrollbar max-h-100 divide-y divide-Light-Dark-Grayish-Blue dark:divide-Dark-Dark-Grayish-Blue"
+                  >
+                    {displayTodo()}
                   </div>
+                  {todoData.length !== 0 && (
+                    <div className="flex justify-between items-center w-full h-12 bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue  px-6">
+                      <div className="">{todoData.length} items left</div>
+                      <div className="hidden md:flex space-x-4 font-bold">
+                        <button
+                          onClick={() => filter(FILTERS.ALL)}
+                          className={`${
+                            activeFilter === FILTERS.ALL
+                              ? "text-Primary-Primary-regal-blue"
+                              : ""
+                          } hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
+                        >
+                          All
+                        </button>
+                        <button
+                          onClick={() => filter(FILTERS.ACTVE)}
+                          className={`${
+                            activeFilter === FILTERS.ACTVE
+                              ? "text-Primary-Primary-regal-blue"
+                              : ""
+                          } hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
+                        >
+                          Active{" "}
+                        </button>
+                        <button
+                          onClick={() => filter(FILTERS.COMPLITED)}
+                          className={`${
+                            activeFilter === FILTERS.COMPLITED
+                              ? "text-Primary-Primary-regal-blue"
+                              : ""
+                          }  hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
+                        >
+                          Completed
+                        </button>
+                      </div>
+                      <div
+                        onClick={deleteAllComplitedTodos}
+                        className="hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer"
+                      >
+                        Clear Completed
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="flex items-center justify-center md:hidden bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue  rounded-lg h-12 mt-4 font-bold">
-                  <button
-                   onClick={()=>filter(FILTERS.ALL)}
-                    className={`${
-                      activeFilter === FILTERS.ALL
-                        ? "text-Primary-Primary-regal-blue"
-                        : ""
-                    } mx-4 hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
-                  >
-                    All
-                  </button>
-                  <button
-                   onClick={()=>filter(FILTERS.ACTVE)}
-                    className={`${
-                      activeFilter === FILTERS.ACTVE
-                        ? "text-Primary-Primary-regal-blue"
-                        : ""
-                    } mx-4 hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
-                  >
-                    Active{" "}
-                  </button>
-                  <button
-                   onClick={()=>filter(FILTERS.COMPLITED)}
-                    className={`${
-                      activeFilter === FILTERS.COMPLITED
-                        ? "text-Primary-Primary-regal-blue"
-                        : ""
-                    } mx-4 hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
-                  >
-                    Completed
-                  </button>
-                </div>
+                {todoData.length !== 0 && (
+                  <div className="flex items-center justify-center md:hidden bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue  rounded-lg h-12 mt-4 font-bold">
+                    <button
+                      onClick={() => filter(FILTERS.ALL)}
+                      className={`${
+                        activeFilter === FILTERS.ALL
+                          ? "text-Primary-Primary-regal-blue"
+                          : ""
+                      } mx-4 hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
+                    >
+                      All
+                    </button>
+                    <button
+                      onClick={() => filter(FILTERS.ACTVE)}
+                      className={`${
+                        activeFilter === FILTERS.ACTVE
+                          ? "text-Primary-Primary-regal-blue"
+                          : ""
+                      } mx-4 hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
+                    >
+                      Active{" "}
+                    </button>
+                    <button
+                      onClick={() => filter(FILTERS.COMPLITED)}
+                      className={`${
+                        activeFilter === FILTERS.COMPLITED
+                          ? "text-Primary-Primary-regal-blue"
+                          : ""
+                      } mx-4 hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
+                    >
+                      Completed
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 

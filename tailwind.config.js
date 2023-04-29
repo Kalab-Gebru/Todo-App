@@ -27,6 +27,9 @@ export default {
           "Very-Dark-Grayish-Blue": "hsl(237, 14%, 26%)",
         },
       },
+      maxHeight: {
+        100: "45vh",
+      },
     },
   },
   plugins: [],

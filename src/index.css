@@ -14,3 +14,42 @@
       src: url(/assets/fonts/JosefinSans-Bold.ttf) format("ttf");
     }
   }
+
+  #style-1::-webkit-scrollbar,
+  #style-7::-webkit-scrollbar,
+  #style-8::-webkit-scrollbar,
+
+    /**  STYLE 1 */
+  #style-1::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #555;
+  }
+  
+  #style-1::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+  }
+
+/** STYLE 7 */
+#style-7::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+	border-radius: 10px;
+}
+
+#style-7::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.44, rgb(122,153,217)),color-stop(0.72, rgb(73,125,189)),color-stop(0.86, rgb(28,58,148)));
+}
+
+  /**  STYLE 8 */
+#style-8::-webkit-scrollbar-track {
+	border: 1px solid black;
+	background-color: #F5F5F5;
+}
+
+#style-8::-webkit-scrollbar-thumb {
+	background-color: #000000;	
+}
