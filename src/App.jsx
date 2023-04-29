@@ -1,4 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useReducer } from "react";
+import {
+  collection,
+  query,
+  onSnapshot,
+  addDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "./firebase";
+import { TodoReducer } from "./hooks/useReducerfunction";
 import { ACTIONS, FILTERS } from "./constants/constant101";
 import TodoListItem from "./componets/TodoListItem";
 import { ThemeContext } from "./contexts/ThemeContext";
@@ -7,14 +18,20 @@ import bgDesktopLight from "./assets/images/bg-desktop-light.jpg";
 import bgMobileDark from "./assets/images/bg-mobile-dark.jpg";
 import bgMobileLight from "./assets/images/bg-mobile-light.jpg";
 import Inputfild from "./componets/Inputfild";
-import { useTodo } from "./hooks/useContextData";
 
 function App() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
-  const { todoData, dispatch } = useTodo();
+  const [todoData, dispatch] = useReducer(TodoReducer, []);
   const [activeFilter, setActiveFilter] = useState(FILTERS.ALL);
 
+  useEffect(() => {
+    dispatch({ type: ACTIONS.GET_INIT_DATA });
+  }, []);
+
   function displayTodo() {
+    {
+      console.log(todoData);
+    }
     if (activeFilter === FILTERS.ACTVE) {
       return todoData
         .filter((t) => {
@@ -111,7 +128,7 @@ function App() {
                 </button>
               </div>
               <div className="text-Light-Dark-Grayish-Blue dark:text-Dark-Dark-Grayish-Blue font-[JosefinSans-regular]">
-                <Inputfild />
+                <Inputfild dispatch={dispatch} />
                 <div className="w-full rounded-lg overflow-hidden divide-y divide-Light-Dark-Grayish-Blue dark:divide-Dark-Dark-Grayish-Blue">
                   <div
                     id="style-7"

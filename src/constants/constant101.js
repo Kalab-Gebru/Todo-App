@@ -1,4 +1,5 @@
 export const ACTIONS = {
+  GET_INIT_DATA: "init",
   ADD_TODO: "Add-todo",
   EDIT_TODO: "edit-todo",
   DELETE_TODO: "Detete-todo",

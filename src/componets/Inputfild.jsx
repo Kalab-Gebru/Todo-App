@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { useTodo } from "../hooks/useContextData";
 import { ACTIONS } from "../constants/constant101";
 
-function Inputfild() {
-  const { dispatch } = useTodo();
+function Inputfild({ dispatch }) {
   const [todoInput, setTodoInput] = useState("");
 
   function handlesubmit(e) {
