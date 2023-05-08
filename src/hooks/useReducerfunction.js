@@ -1,12 +1,4 @@
-import {
-  collection,
-  query,
-  onSnapshot,
-  addDoc,
-  doc,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
+import {collection,query,onSnapshot,addDoc,doc,updateDoc,deleteDoc,} from "firebase/firestore";
 import { db } from "../firebase";
 import { ACTIONS } from "../constants/constant101";
 
