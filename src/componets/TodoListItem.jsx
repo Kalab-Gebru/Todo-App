@@ -1,17 +1,32 @@
 import React, { useState } from "react";
-import { ACTIONS } from "../constants/constant101";
+import { doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase";
 import Editfild from "../componets/Editfild";
 import edit from "../assets/images/edit-light.png";
 
-function TodoListItem({ data, dispatch }) {
+function TodoListItem({ data, init }) {
   const [editMode, setEditMode] = useState(false);
+  const [checked, setChecked] = useState(data.completed);
 
-  function toggle_complete() {
-    dispatch({ type: ACTIONS.TOGGELE_COMPLETE, payload: { ID: data.id } });
+  async function toggle_complete() {
+    const todoref = doc(db, "Todos", data.id);
+    try {
+      await updateDoc(todoref, { completed: !data.completed });
+      setChecked((pre) => !pre);
+      init();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
-  function delete_todo() {
-    dispatch({ type: ACTIONS.DELETE_TODO, payload: { ID: data.id } });
+  async function delete_todo() {
+    const todoref = doc(db, "Todos", data.id);
+    try {
+      await deleteDoc(todoref);
+      init();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   function edit_todo() {
@@ -29,12 +44,12 @@ function TodoListItem({ data, dispatch }) {
           <button
             onClick={toggle_complete}
             className={`${
-              data.Complited
+              checked
                 ? "bg-gradient-to-br from-Primary-bg-purple to-Primary-bg-pink"
                 : "border border-Light-Dark-Grayish-Blue dark:border-Dark-Dark-Grayish-Blue"
             } flex justify-center items-center rounded-full w-6 h-6 `}
           >
-            {data.Complited && (
+            {checked && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="11"
@@ -54,7 +69,7 @@ function TodoListItem({ data, dispatch }) {
           }`}
         >
           {editMode ? (
-            <Editfild data={data} toggle={edit_todo} dispatch={dispatch} />
+            <Editfild data={data} toggle={edit_todo} init={init} />
           ) : (
             `${data.task}`
           )}

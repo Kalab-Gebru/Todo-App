@@ -1,66 +1,77 @@
-import {collection,query,onSnapshot,addDoc,doc,updateDoc,deleteDoc,} from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { ACTIONS } from "../constants/constant101";
 
 export function TodoReducer(todo, action) {
-  switch (action.type) {
-    case ACTIONS.GET_INIT_DATA:
-      {
-        const q = query(collection(db, "todos"));
-        const unsub = onSnapshot(q, (querySnapshot) => {
-          let todosArray = [];
-          querySnapshot.forEach((doc) => {
-            todosArray.push({ ...doc.data(), id: doc.id });
-          });
-          {
-            console.log(todosArray);
-          }
-          return [...todo, todosArray];
-        });
-        unsub();
-      }
+  const todoref = collection(db, "Todos");
+  const getTodos = async () => {
+    try {
+      const data = await getDocs(todoref);
+      const filterdData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      return filterdData;
+    } catch (err) {
+      console.log(err);
       return [];
-    case ACTIONS.ADD_TODO: {
-      addDoc(collection(db, "todos"), newTodo(action.payload.newTask));
-      return [...todo, newTodo(action.payload.newTask)];
     }
-    case ACTIONS.EDIT_TODO:
-      return todo.map((t) => {
-        if (t.id === action.payload.ID) {
-          {
-            console.log("todo with " + t.id + " was edited");
+  };
+
+  async function tryswitch(action) {
+    switch (action.type) {
+      case ACTIONS.GET_INIT_DATA: {
+        const initData = await getTodos();
+        return initData;
+      }
+      case ACTIONS.ADD_TODO: {
+        addDoc(todoref, newTodo(action.payload.newTask));
+        return [...todo, newTodo(action.payload.newTask)];
+      }
+      case ACTIONS.EDIT_TODO:
+        return todo.map((t) => {
+          if (t.id === action.payload.ID) {
+            {
+              console.log("todo with " + t.id + " was edited");
+            }
+            return { ...t, task: action.payload.newTask };
           }
-          return { ...t, task: action.payload.newTask };
-        }
-        return t;
-      });
-    case ACTIONS.DELETE_TODO:
-      return todo.filter((t) => {
-        return t.id !== action.payload.ID;
-      });
-    case ACTIONS.TOGGELE_COMPLETE:
-      return todo.map((t) => {
-        if (t.id === action.payload.ID) {
-          {
-            console.log("todo with " + t.id + " was toggled complete");
+          return t;
+        });
+      case ACTIONS.DELETE_TODO:
+        return todo.filter((t) => {
+          return t.id !== action.payload.ID;
+        });
+      case ACTIONS.TOGGELE_COMPLETE:
+        return todo.map((t) => {
+          if (t.id === action.payload.ID) {
+            {
+              console.log("todo with " + t.id + " was toggled complete");
+            }
+            return { ...t, completed: !t.completed };
           }
-          return { ...t, Complited: !t.Complited };
-        }
-        return t;
-      });
-    case ACTIONS.CLEAR_COMPLETE:
-      return todo.filter((t) => {
-        return t.Complited !== true;
-      });
-    default:
-      return todo;
+          return t;
+        });
+      case ACTIONS.CLEAR_COMPLETE:
+        return todo.filter((t) => {
+          return t.completed !== true;
+        });
+      default:
+        return todo;
+    }
   }
+  tryswitch(action);
 }
 
 function newTodo(newTask) {
   return {
-    id: Date.now(),
     task: newTask,
-    Complited: false,
+    completed: false,
   };
 }

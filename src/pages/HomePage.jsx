@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState, useReducer } from "react";
-import {collection,query, onSnapshot, addDoc,doc,updateDoc,deleteDoc} from "firebase/firestore";
-import { db } from "../firebase";
 import { TodoReducer } from "../hooks/useReducerfunction";
 import { ACTIONS, FILTERS } from "../constants/constant101";
 import TodoListItem from "../componets/TodoListItem";
+import { collection, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase";
 import { ThemeContext } from "../contexts/ThemeContext";
 import bgDesktopDark from "../assets/images/bg-desktop-dark.jpg";
 import bgDesktopLight from "../assets/images/bg-desktop-light.jpg";
@@ -15,45 +15,43 @@ function HomePage() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const [todoData, dispatch] = useReducer(TodoReducer, []);
   const [activeFilter, setActiveFilter] = useState(FILTERS.ALL);
+  const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    dispatch({ type: ACTIONS.GET_INIT_DATA });
+    setInitTodos();
   }, []);
 
   function displayTodo() {
-    {
-      console.log(todoData);
-    }
     if (activeFilter === FILTERS.ACTVE) {
-      return todoData
+      return todos
         .filter((t) => {
-          return t.Complited === false;
+          return t.completed === false;
         })
         .map((data, i) => {
           return (
             <div key={i}>
-              <TodoListItem data={data} dispatch={dispatch} />
+              <TodoListItem data={data} init={setInitTodos} />
             </div>
           );
         });
     }
-    if (activeFilter === FILTERS.COMPLITED) {
-      return todoData
+    if (activeFilter === FILTERS.COMPLETED) {
+      return todos
         .filter((t) => {
-          return t.Complited === true;
+          return t.completed === true;
         })
         .map((data, i) => {
           return (
             <div key={i}>
-              <TodoListItem data={data} dispatch={dispatch} />
+              <TodoListItem data={data} init={setInitTodos} />
             </div>
           );
         });
     } else {
-      return todoData.map((data, i) => {
+      return todos.map((data, i) => {
         return (
           <div key={i}>
-            <TodoListItem data={data} dispatch={dispatch} />
+            <TodoListItem data={data} init={setInitTodos} />
           </div>
         );
       });
@@ -64,8 +62,23 @@ function HomePage() {
     setActiveFilter(selectedFilter);
   }
 
-  function deleteAllComplitedTodos() {
+  function deleteAllCompletedTodos() {
     dispatch({ type: ACTIONS.CLEAR_COMPLETE, payload: "" });
+  }
+
+  async function setInitTodos() {
+    const todoref = collection(db, "Todos");
+    try {
+      const data = await getDocs(todoref);
+      const filterdData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setTodos(filterdData);
+    } catch (err) {
+      console.log(err);
+      setTodos([]);
+    }
   }
 
   return (
@@ -120,17 +133,17 @@ function HomePage() {
                 </button>
               </div>
               <div className="text-Light-Dark-Grayish-Blue dark:text-Dark-Dark-Grayish-Blue font-[JosefinSans-regular]">
-                <Inputfild dispatch={dispatch} />
+                <Inputfild init={setInitTodos} />
                 <div className="w-full rounded-lg overflow-hidden divide-y divide-Light-Dark-Grayish-Blue dark:divide-Dark-Dark-Grayish-Blue">
                   <div
                     id="style-7"
                     className="overflow-y-scroll scrollbar max-h-100 divide-y divide-Light-Dark-Grayish-Blue dark:divide-Dark-Dark-Grayish-Blue"
                   >
-                    {displayTodo()}
+                    {todos && displayTodo()}
                   </div>
-                  {todoData.length !== 0 && (
+                  {todos && todos.length !== 0 && (
                     <div className="flex justify-between items-center w-full h-12 bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue  px-6">
-                      <div className="">{todoData.length} items left</div>
+                      <div className="">{todos.length} items left</div>
                       <div className="hidden md:flex space-x-4 font-bold">
                         <button
                           onClick={() => filter(FILTERS.ALL)}
@@ -153,9 +166,9 @@ function HomePage() {
                           Active{" "}
                         </button>
                         <button
-                          onClick={() => filter(FILTERS.COMPLITED)}
+                          onClick={() => filter(FILTERS.COMPLETED)}
                           className={`${
-                            activeFilter === FILTERS.COMPLITED
+                            activeFilter === FILTERS.COMPLETED
                               ? "text-Primary-Primary-regal-blue"
                               : ""
                           }  hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}
@@ -164,7 +177,7 @@ function HomePage() {
                         </button>
                       </div>
                       <div
-                        onClick={deleteAllComplitedTodos}
+                        onClick={deleteAllCompletedTodos}
                         className="hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer"
                       >
                         Clear Completed
@@ -172,7 +185,7 @@ function HomePage() {
                     </div>
                   )}
                 </div>
-                {todoData.length !== 0 && (
+                {todos && todos.length !== 0 && (
                   <div className="flex items-center justify-center md:hidden bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue  rounded-lg h-12 mt-4 font-bold">
                     <button
                       onClick={() => filter(FILTERS.ALL)}
@@ -195,9 +208,9 @@ function HomePage() {
                       Active{" "}
                     </button>
                     <button
-                      onClick={() => filter(FILTERS.COMPLITED)}
+                      onClick={() => filter(FILTERS.COMPLETED)}
                       className={`${
-                        activeFilter === FILTERS.COMPLITED
+                        activeFilter === FILTERS.COMPLETED
                           ? "text-Primary-Primary-regal-blue"
                           : ""
                       } mx-4 hover:text-Light-Very-Dark-Grayish-Blue dark:hover:text-Dark-Light-Grayish-Blue-h hover:cursor-pointer`}

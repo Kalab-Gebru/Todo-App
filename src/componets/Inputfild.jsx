@@ -1,13 +1,20 @@
 import React, { useState } from "react";
-import { ACTIONS } from "../constants/constant101";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
-function Inputfild({ dispatch }) {
+function Inputfild({ init }) {
   const [todoInput, setTodoInput] = useState("");
 
-  function handlesubmit(e) {
+  async function handlesubmit(e) {
     e.preventDefault();
-    dispatch({ type: ACTIONS.ADD_TODO, payload: { newTask: todoInput } });
+    const todoref = collection(db, "Todos");
+    try {
+      const data = await addDoc(todoref, { task: todoInput, completed: false });
+    } catch (err) {
+      console.log(err);
+    }
     setTodoInput("");
+    init();
   }
   return (
     <div>

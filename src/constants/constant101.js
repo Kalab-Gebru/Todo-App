@@ -10,15 +10,5 @@ export const ACTIONS = {
 export const FILTERS = {
   ALL: "All",
   ACTVE: "Active",
-  COMPLITED: "Complited",
-};
-
-export const LANGUAGE_LIST = {
-  ENGLISH: "ENGLISH",
-  AMHARIC: "AMHARIC",
-};
-
-export const LANGUAGE = {
-  ENGLISH: {},
-  AMHARIC: {},
+  COMPLETED: "Completed",
 };
