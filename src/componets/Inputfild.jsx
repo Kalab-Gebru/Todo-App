@@ -1,20 +1,15 @@
 import React, { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { useTodo } from "../hooks/useContextData";
 
-function Inputfild({ init }) {
+function Inputfild({ uid }) {
   const [todoInput, setTodoInput] = useState("");
+  const { todoFun } = useTodo();
 
   async function handlesubmit(e) {
     e.preventDefault();
-    const todoref = collection(db, "Todos");
-    try {
-      const data = await addDoc(todoref, { task: todoInput, completed: false });
-    } catch (err) {
-      console.log(err);
-    }
+    todoFun.createTodoFun(todoInput, uid);
+    todoFun.init(uid);
     setTodoInput("");
-    init();
   }
   return (
     <div>
@@ -24,7 +19,7 @@ function Inputfild({ init }) {
           type="text"
           value={todoInput}
           onChange={(e) => setTodoInput(e.target.value)}
-          placeholder="Username"
+          placeholder="Add new Todo..."
           required
         ></input>
       </form>

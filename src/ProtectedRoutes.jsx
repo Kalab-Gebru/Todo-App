@@ -1,8 +1,8 @@
 import { Outlet, Navigate } from "react-router";
+import { auth } from "./firebase";
 
 const UseAuth = () => {
-  const user = { loggedIn: true };
-  return user && user.loggedIn;
+  return auth && auth.currentUser;
 };
 
 const ProtectedRoutes = () => {

@@ -1,20 +1,14 @@
 import React, { useState } from "react";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { useTodo } from "../hooks/useContextData";
 
-function Editfild({ data, toggle, init }) {
+function Editfild({ data, toggle, uid }) {
   const [editedTodo, setEditedTodo] = useState(data.task);
+  const { todoFun } = useTodo();
 
   async function handlesubmit(e) {
     e.preventDefault();
-    const todoref = doc(db, "Todos", data.id);
-    try {
-      await updateDoc(todoref, { task: editedTodo });
-      toggle();
-      init();
-    } catch (err) {
-      console.log(err);
-    }
+    todoFun.updateTodoFun(data.id, editedTodo, uid);
+    toggle();
   }
   return (
     <div className="w-full">
