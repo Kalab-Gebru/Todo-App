@@ -65,8 +65,8 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center dark:text-white w-full min-h-screen dark:bg-Dark-Very-Dark-Blue">
-      <div className="flex w-96 items-center justify-between bg-gray-300 p-4 rounded dark:bg-Dark-Very-Dark-Desaturated-Blue">
+    <div className="flex flex-col items-center justify-center w-full min-h-screen dark:text-white dark:bg-Dark-Very-Dark-Blue">
+      <div className="flex items-center justify-between p-4 bg-gray-300 rounded w-96 dark:bg-Dark-Very-Dark-Desaturated-Blue">
         <h1 className="text-4xl font-bold">TODO APP</h1>
         <button className="" onClick={toggleTheme}>
           {isDarkMode ? (
@@ -88,46 +88,46 @@ function LoginPage() {
           )}
         </button>
       </div>
-      <div className="flex flex-col w-96 border shadow-lg rounded-lg p-6 m-4 dark:bg-Dark-Very-Dark-Desaturated-Blue">
+      <div className="flex flex-col p-6 m-4 border rounded-lg shadow-lg w-96 dark:bg-Dark-Very-Dark-Desaturated-Blue">
         {creatingAcount && (
-          <h2 className="text-xl font-bold text-gray-400 pb-6">
+          <h2 className="pb-6 text-xl font-bold text-gray-400">
             Creating Acount
           </h2>
         )}
-        <label className="text-xl font-bold mb-2" htmlFor="name">
+        <label className="mb-2 text-xl font-bold" htmlFor="name">
           Email:
         </label>
         <input
-          className="rounded h-12 px-4 mb-4 border"
+          className="h-12 px-4 mb-4 border rounded dark:bg-slate-900"
           placeholder="example@gmail.com"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           id="name"
         />
-        <label className="text-xl font-bold mb-2" htmlFor="password">
+        <label className="mb-2 text-xl font-bold" htmlFor="password">
           password:
         </label>
         <input
-          className="rounded h-12 px-4 mb-4 border"
+          className="h-12 px-4 mb-4 border rounded dark:bg-slate-900"
           placeholder="********"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           id="password"
         />
-        <div className="flex justify-end items-baseline space-x-4 w-full">
+        <div className="flex items-baseline justify-end w-full space-x-4">
           {creatingAcount ? (
             <button
               onClick={SignUpFun}
-              className="bg-green-300 text-white h-12 w-32 rounded uppercase"
+              className="w-32 h-12 text-white uppercase bg-green-300 rounded"
             >
               Sign UP
             </button>
           ) : (
             <button
               onClick={SignInFun}
-              className="bg-green-300 text-white h-12 w-32 rounded uppercase"
+              className="w-32 h-12 text-white uppercase bg-green-300 rounded"
             >
               Sign In
             </button>
@@ -135,7 +135,7 @@ function LoginPage() {
         </div>
         <button
           onClick={SignInWithGoogleFun}
-          className="rounded border w-full h-12 mt-8"
+          className="w-full h-12 mt-8 border rounded"
         >
           SignIn With Google
         </button>
@@ -143,7 +143,7 @@ function LoginPage() {
           onClick={() => {
             setCreatingAcount((pre) => !pre);
           }}
-          className="rounded border w-full h-12 mt-8 bg-blue-400 text-white"
+          className="w-full h-12 mt-8 text-white bg-blue-400 border rounded"
         >
           {creatingAcount ? "Already have Acount? Sign in." : "Create Account"}
         </button>
