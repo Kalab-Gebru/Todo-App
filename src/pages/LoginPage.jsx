@@ -9,6 +9,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
+import { FcGoogle } from "react-icons/fc";
 
 function LoginPage() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -135,9 +136,10 @@ function LoginPage() {
         </div>
         <button
           onClick={SignInWithGoogleFun}
-          className="w-full h-12 mt-8 border rounded-xl"
+          className="flex items-center justify-center w-full h-12 gap-2 mt-8 border rounded-xl"
         >
-          SignIn With Google
+          <FcGoogle size={25} />
+          <span>SignIn With Google</span>
         </button>
         <button
           onClick={() => {
