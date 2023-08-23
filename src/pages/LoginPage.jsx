@@ -66,7 +66,7 @@ function LoginPage() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-screen dark:text-white dark:bg-Dark-Very-Dark-Blue">
-      <div className="flex items-center justify-between p-4 bg-gray-300 rounded w-96 dark:bg-Dark-Very-Dark-Desaturated-Blue">
+      <div className="flex items-center justify-between p-4 bg-gray-300 rounded-xl w-[500px] dark:bg-Dark-Very-Dark-Desaturated-Blue">
         <h1 className="text-4xl font-bold">TODO APP</h1>
         <button className="" onClick={toggleTheme}>
           {isDarkMode ? (
@@ -88,7 +88,7 @@ function LoginPage() {
           )}
         </button>
       </div>
-      <div className="flex flex-col p-6 m-4 border rounded-lg shadow-lg w-96 dark:bg-Dark-Very-Dark-Desaturated-Blue">
+      <div className="flex flex-col p-6 m-4 border shadow-lg rounded-xl  w-[500px] dark:bg-Dark-Very-Dark-Desaturated-Blue">
         {creatingAcount && (
           <h2 className="pb-6 text-xl font-bold text-gray-400">
             Creating Acount
@@ -98,7 +98,7 @@ function LoginPage() {
           Email:
         </label>
         <input
-          className="h-12 px-4 mb-4 border rounded dark:bg-slate-900"
+          className="h-12 px-4 mb-4 border rounded-xl dark:bg-slate-900"
           placeholder="example@gmail.com"
           type="email"
           value={email}
@@ -109,7 +109,7 @@ function LoginPage() {
           password:
         </label>
         <input
-          className="h-12 px-4 mb-4 border rounded dark:bg-slate-900"
+          className="h-12 px-4 mb-4 border rounded-xl dark:bg-slate-900"
           placeholder="********"
           type="password"
           value={password}
@@ -120,14 +120,14 @@ function LoginPage() {
           {creatingAcount ? (
             <button
               onClick={SignUpFun}
-              className="w-32 h-12 text-white uppercase bg-green-300 rounded"
+              className="w-32 h-12 text-white uppercase bg-green-300 rounded-lg"
             >
               Sign UP
             </button>
           ) : (
             <button
               onClick={SignInFun}
-              className="w-32 h-12 text-white uppercase bg-green-300 rounded"
+              className="w-32 h-12 text-white uppercase bg-green-600 rounded-lg"
             >
               Sign In
             </button>
@@ -135,7 +135,7 @@ function LoginPage() {
         </div>
         <button
           onClick={SignInWithGoogleFun}
-          className="w-full h-12 mt-8 border rounded"
+          className="w-full h-12 mt-8 border rounded-xl"
         >
           SignIn With Google
         </button>
@@ -143,7 +143,7 @@ function LoginPage() {
           onClick={() => {
             setCreatingAcount((pre) => !pre);
           }}
-          className="w-full h-12 mt-8 text-white bg-blue-400 border rounded"
+          className="w-full h-12 mt-8 text-white border bg-sky-600 rounded-xl"
         >
           {creatingAcount ? "Already have Acount? Sign in." : "Create Account"}
         </button>
