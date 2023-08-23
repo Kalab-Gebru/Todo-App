@@ -1,4 +1,5 @@
 export const ACTIONS = {
+  GET_INIT_DATA: "init",
   ADD_TODO: "Add-todo",
   EDIT_TODO: "edit-todo",
   DELETE_TODO: "Detete-todo",
@@ -9,15 +10,5 @@ export const ACTIONS = {
 export const FILTERS = {
   ALL: "All",
   ACTVE: "Active",
-  COMPLITED: "Complited",
-};
-
-export const LANGUAGE_LIST = {
-  ENGLISH: "ENGLISH",
-  AMHARIC: "AMHARIC",
-};
-
-export const LANGUAGE = {
-  ENGLISH: {},
-  AMHARIC: {},
+  COMPLETED: "Completed",
 };

@@ -1,24 +1,22 @@
 import React, { useState } from "react";
-import { ACTIONS } from "../constants/constant101";
 import Editfild from "../componets/Editfild";
 import edit from "../assets/images/edit-light.png";
+import { useTodo } from "../hooks/useContextData";
 
-function TodoListItem({ data, dispatch }) {
+function TodoListItem({ data, uid }) {
   const [editMode, setEditMode] = useState(false);
+  const { todoFun } = useTodo();
 
-  function toggle_complete() {
-    dispatch({ type: ACTIONS.TOGGELE_COMPLETE, payload: { ID: data.id } });
+  async function toggle_complete() {
+    todoFun.updateToggleFun(data.id, data.completed, uid);
   }
 
-  function delete_todo() {
-    dispatch({ type: ACTIONS.DELETE_TODO, payload: { ID: data.id } });
+  async function delete_todo() {
+    todoFun.deleteTodoFun(data.id, uid);
   }
 
   function edit_todo() {
     setEditMode((edit) => !edit);
-    {
-      console.log(editMode);
-    }
   }
 
   return (
@@ -29,12 +27,12 @@ function TodoListItem({ data, dispatch }) {
           <button
             onClick={toggle_complete}
             className={`${
-              data.Complited
+              data.completed
                 ? "bg-gradient-to-br from-Primary-bg-purple to-Primary-bg-pink"
                 : "border border-Light-Dark-Grayish-Blue dark:border-Dark-Dark-Grayish-Blue"
             } flex justify-center items-center rounded-full w-6 h-6 `}
           >
-            {data.Complited && (
+            {data.completed && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="11"
@@ -54,7 +52,7 @@ function TodoListItem({ data, dispatch }) {
           }`}
         >
           {editMode ? (
-            <Editfild data={data} toggle={edit_todo} dispatch={dispatch} />
+            <Editfild data={data} toggle={edit_todo} uid={uid} />
           ) : (
             `${data.task}`
           )}

@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import { useTodo } from "../hooks/useContextData";
-import { ACTIONS } from "../constants/constant101";
 
-function Editfild({ data, toggle, dispatch }) {
-  const [editedTodo, setEditedTodo] = useState(data);
+function Editfild({ data, toggle, uid }) {
+  const [editedTodo, setEditedTodo] = useState(data.task);
+  const { todoFun } = useTodo();
 
-  function handlesubmit(e) {
+  async function handlesubmit(e) {
     e.preventDefault();
-    dispatch({
-      type: ACTIONS.EDIT_TODO,
-      payload: { ID: editedTodo.id, newTask: editedTodo.task },
-    });
+    todoFun.updateTodoFun(data.id, editedTodo, uid);
     toggle();
   }
   return (
@@ -19,10 +16,8 @@ function Editfild({ data, toggle, dispatch }) {
         <input
           className="h-12 w-full rounded-lg border bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue text-Light-Very-Dark-Grayish-Blue dark:text-Dark-Light-Grayish-Blue px-6"
           type="text"
-          value={editedTodo.task}
-          onChange={(e) =>
-            setEditedTodo({ ...editedTodo, task: e.target.value })
-          }
+          value={editedTodo}
+          onChange={(e) => setEditedTodo(e.target.value)}
           placeholder="editTodo"
           required
         ></input>

@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useTodo } from "../hooks/useContextData";
-import { ACTIONS } from "../constants/constant101";
 
-function Inputfild() {
-  const { dispatch } = useTodo();
+function Inputfild({ uid }) {
   const [todoInput, setTodoInput] = useState("");
+  const { todoFun } = useTodo();
 
-  function handlesubmit(e) {
+  async function handlesubmit(e) {
     e.preventDefault();
-    dispatch({ type: ACTIONS.ADD_TODO, payload: { newTask: todoInput } });
+    todoFun.createTodoFun(todoInput, uid);
+    todoFun.init(uid);
     setTodoInput("");
   }
   return (
@@ -19,7 +19,7 @@ function Inputfild() {
           type="text"
           value={todoInput}
           onChange={(e) => setTodoInput(e.target.value)}
-          placeholder="Username"
+          placeholder="Add new Todo..."
           required
         ></input>
       </form>

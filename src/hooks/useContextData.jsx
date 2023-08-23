@@ -1,49 +1,91 @@
-import React, { useContext, useReducer } from "react";
-import { TodoReducer } from "./useReducerfunction";
+import {
+  collection,
+  doc,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "../firebase";
+import React, { useContext, useState, useEffect } from "react";
 
 const TodoDataContext = React.createContext();
-const Todo_Data = [
-  {
-    id: "1",
-    task: "Finish the by friday lunch time 1",
-    Complited: true,
-  },
-  {
-    id: "2",
-    task: "Finish the by friday lunch time 2",
-    Complited: false,
-  },
-  {
-    id: "3",
-    task: "Finish the by friday lunch time 3",
-    Complited: false,
-  },
-  {
-    id: "4",
-    task: "Finish the by friday lunch time 4",
-    Complited: false,
-  },
-  {
-    id: "5",
-    task: "Finish the by friday lunch time 5",
-    Complited: false,
-  },
-  {
-    id: "6",
-    task: "Finish the by friday lunch time 6",
-    Complited: false,
-  },
-];
 
 export function useTodo() {
   return useContext(TodoDataContext);
 }
 
 export function DataProvider({ children }) {
-  const [todoData, dispatch] = useReducer(TodoReducer, Todo_Data);
+  const [todoData, setTodoData] = useState([]);
+  const [todoFun, setTodoFun] = useState({});
+
+  useEffect(() => {
+    setTodoFun({
+      init,
+      createTodoFun,
+      updateTodoFun,
+      updateToggleFun,
+      deleteTodoFun,
+    });
+    // init();
+  }, []);
+  const init = async (uid) => {
+    const todoref = collection(db, uid);
+    try {
+      const data = await getDocs(todoref);
+      const filterdData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setTodoData(filterdData);
+    } catch (err) {
+      console.log(err);
+      setTodoData([]);
+    }
+  };
+
+  const createTodoFun = async (todoInput, uid) => {
+    const todoref = collection(db, uid);
+    try {
+      await addDoc(todoref, { task: todoInput, completed: false });
+    } catch (err) {
+      console.log(err);
+    }
+    init(uid);
+  };
+
+  const updateTodoFun = async (id, editedTodo, uid) => {
+    const todoref = doc(db, uid, id);
+    try {
+      await updateDoc(todoref, { task: editedTodo });
+      init(uid);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const updateToggleFun = async (id, completed, uid) => {
+    const todoref = doc(db, uid, id);
+    try {
+      await updateDoc(todoref, { completed: !completed });
+      init(uid);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deleteTodoFun = async (id, uid) => {
+    const todoref = doc(db, uid, id);
+    try {
+      await deleteDoc(todoref);
+      init(uid);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <TodoDataContext.Provider value={{ todoData, dispatch }}>
+    <TodoDataContext.Provider value={{ todoData, todoFun, setTodoData }}>
       {children}
     </TodoDataContext.Provider>
   );

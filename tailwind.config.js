@@ -4,6 +4,7 @@ export default {
   darkMode: "class",
   theme: {
     extend: {
+      display: ["group-hover"],
       colors: {
         Primary: {
           "Primary-regal-blue": "#243c5a",
