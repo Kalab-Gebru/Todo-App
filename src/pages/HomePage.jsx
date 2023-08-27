@@ -11,64 +11,30 @@ import bgMobileLight from "../assets/images/bg-mobile-light.jpg";
 import Inputfild from "../componets/Inputfild";
 import { useTodo } from "../hooks/useContextData";
 import { useNavigate } from "react-router-dom";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 function HomePage() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const [activeFilter, setActiveFilter] = useState(FILTERS.ALL);
   const { todoData, todoFun, setTodoData } = useTodo();
+
   const uid = auth.currentUser.uid;
   const navigate = useNavigate();
 
   useEffect(() => {
-    todoFun.init(uid);
-  }, []);
-
-  function displayTodo() {
-    if (activeFilter === FILTERS.ACTVE) {
-      return todoData
-        .filter((t) => {
-          return t.completed === false;
-        })
-        .map((data, i) => {
-          return (
-            <div key={i}>
-              <TodoListItem data={data} uid={uid} />
-            </div>
-          );
-        });
-    }
-    if (activeFilter === FILTERS.COMPLETED) {
-      return todoData
-        .filter((t) => {
-          return t.completed === true;
-        })
-        .map((data, i) => {
-          return (
-            <div key={i}>
-              <TodoListItem data={data} uid={uid} />
-            </div>
-          );
-        });
-    } else {
-      return todoData.map((data, i) => {
-        return (
-          <div key={i}>
-            <TodoListItem data={data} uid={uid} />
-          </div>
-        );
-      });
-    }
-  }
-
-  function filter(selectedFilter) {
-    setActiveFilter(selectedFilter);
-  }
+    todoFun?.init(uid);
+  }, [todoFun]);
 
   function deleteAllCompletedTodos() {
-    todoData.map((d) => {
-      if (d.completed == true) {
-        todoFun.deleteTodoFun(d.id, uid);
-      }
+    const completedTodos = todoData.filter((d) => d.completed === true);
+    completedTodos.forEach((d) => {
+      todoFun.deleteTodoFun(d.id, uid);
     });
   }
 
@@ -82,28 +48,63 @@ function HomePage() {
     }
   }
 
+  function handleOnDragEnd(event) {
+    // Implement drag end functionality here
+  }
+
+  function filter(selectedFilter) {
+    setActiveFilter(selectedFilter);
+  }
+
+  function filterActiveTodos() {
+    return todoData?.filter((t) => t.completed === false);
+  }
+
+  function filterCompletedTodos() {
+    return todoData?.filter((t) => t.completed === true);
+  }
+
+  function mapTodoItems(data) {
+    return (
+      <div key={data.id}>
+        <TodoListItem data={data} uid={uid} />
+      </div>
+    );
+  }
+
+  function displayTodo() {
+    if (activeFilter === FILTERS.ACTVE) {
+      return filterActiveTodos()?.map(mapTodoItems);
+    }
+    if (activeFilter === FILTERS.COMPLETED) {
+      return filterCompletedTodos()?.map(mapTodoItems);
+    } else {
+      return todoData?.map(mapTodoItems);
+    }
+  }
+
   return (
     <div className={`${isDarkMode ? "dark" : " "}`}>
-      <div className="flex flex-col items-center min-h-screen w-full bg-Light-Very-Light-Grayish-Blue dark:bg-Dark-Very-Dark-Blue">
+      <div className="flex flex-col items-center w-full min-h-screen bg-Light-Very-Light-Grayish-Blue dark:bg-Dark-Very-Dark-Blue">
         <div className="absolute left-0 top-0 h-[25vh] md:h-[40vh] w-full z-0  ">
           <img
-            className="block md:hidden object-cover w-full h-full"
+            className="block object-cover w-full h-full md:hidden"
             src={isDarkMode ? bgMobileDark : bgMobileLight}
             alt="bgdesktopdark"
           />
           <img
-            className="hidden md:block object-cover w-full h-full"
+            className="hidden object-cover w-full h-full md:block"
             src={isDarkMode ? bgDesktopDark : bgDesktopLight}
             alt="bgdesktopdark"
           />
         </div>
-        <div className="relatvie flex flex-col items-center md:justify-center min-h-screen w-full  z-10">
-          <div className="w-full md:w-3/4 lg:w-5/12 flex space-x-4 items-center justify-end z-30 pt-4">
-            <h2 className="font-bold uppercase text-white">
+        <div className="z-10 flex flex-col items-center w-full min-h-screen relatvie md:justify-center">
+          <div className="z-30 flex items-center justify-end w-full pt-4 space-x-4 md:w-3/4 lg:w-5/12">
+            <h2 className="font-bold text-white uppercase">
               {auth.currentUser.displayName || auth.currentUser.email}
             </h2>
-            <div onClick={LogOutFun} className="group relative">
-              <div className="lex flex-col justify-center items-center cursor-pointer rounded-full overflow-hidden w-10 h-10 ">
+            <div onClick={LogOutFun} className="relative group">
+              <div className="flex-col items-center justify-center w-10 h-10 overflow-hidden rounded-full cursor-pointer lex ">
                 {auth.currentUser.photoURL ? (
                   <img
                     className="w-full h-full"
@@ -118,7 +119,7 @@ function HomePage() {
                   />
                 )}
               </div>
-              <div className="absolute hidden group-hover:inline-block w-28 bg-black text-white text-center py-1 rounded z-40 top-12 -left-20">
+              <div className="absolute z-40 hidden py-1 text-center text-white bg-black rounded group-hover:inline-block w-28 top-12 -left-20">
                 Sign out
               </div>
             </div>
@@ -129,7 +130,6 @@ function HomePage() {
                 <div className="tracking-[1rem] uppercase font-bold text-4xl md:text-5xl">
                   TODO
                 </div>
-                {/* <button onClick={}>add to local storage</button> */}
                 <button className="" onClick={toggleTheme}>
                   {isDarkMode ? (
                     <svg
@@ -160,17 +160,25 @@ function HomePage() {
               </div>
               <div className="text-Light-Dark-Grayish-Blue dark:text-Dark-Dark-Grayish-Blue font-[JosefinSans-regular]">
                 <Inputfild uid={uid} />
-                <div className="w-full rounded-lg overflow-hidden divide-y divide-Light-Dark-Grayish-Blue dark:divide-Dark-Dark-Grayish-Blue">
+                {!todoData && (
+                  <div className="flex items-center justify-center w-full h-32">
+                    <div
+                      className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                      role="status"
+                    ></div>
+                  </div>
+                )}
+                <div className="w-full overflow-hidden divide-y rounded-lg divide-Light-Dark-Grayish-Blue dark:divide-Dark-Dark-Grayish-Blue">
                   <div
                     id="style-7"
-                    className="overflow-y-scroll scrollbar max-h-100 divide-y divide-Light-Dark-Grayish-Blue dark:divide-Dark-Dark-Grayish-Blue"
+                    className="overflow-y-scroll divide-y scrollbar max-h-100 divide-Light-Dark-Grayish-Blue dark:divide-Dark-Dark-Grayish-Blue"
                   >
                     {todoData && displayTodo()}
                   </div>
                   {todoData && todoData.length !== 0 && (
-                    <div className="flex justify-between items-center w-full h-12 bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue  px-6">
+                    <div className="flex items-center justify-between w-full h-12 px-6 bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue">
                       <div className="">{todoData.length} items left</div>
-                      <div className="hidden md:flex space-x-4 font-bold">
+                      <div className="hidden space-x-4 font-bold md:flex">
                         <button
                           onClick={() => filter(FILTERS.ALL)}
                           className={`${
@@ -212,7 +220,7 @@ function HomePage() {
                   )}
                 </div>
                 {todoData && todoData.length !== 0 && (
-                  <div className="flex items-center justify-center md:hidden bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue  rounded-lg h-12 mt-4 font-bold">
+                  <div className="flex items-center justify-center h-12 mt-4 font-bold rounded-lg md:hidden bg-Light-Very-Light-Gray dark:bg-Dark-Very-Dark-Desaturated-Blue">
                     <button
                       onClick={() => filter(FILTERS.ALL)}
                       className={`${
@@ -248,9 +256,9 @@ function HomePage() {
               </div>
             </div>
 
-            <div className="flex justify-center items-center w-full h-12">
+            <div className="flex items-center justify-center w-full h-12">
               <h3 className="text-center text-Light-Dark-Grayish-Blue dark:text-Dark-Dark-Grayish-Blue">
-                Drag and drop to reorder list
+                {/* Drag and drop to reorder list */}
               </h3>
             </div>
           </div>
