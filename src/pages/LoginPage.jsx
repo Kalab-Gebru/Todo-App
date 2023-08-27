@@ -6,8 +6,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signOut,
-  onAuthStateChanged,
 } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 
@@ -26,7 +24,8 @@ function LoginPage() {
     });
   }, []);
 
-  async function SignInFun() {
+  async function SignInFun(e) {
+    e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setEmail("");
@@ -37,12 +36,13 @@ function LoginPage() {
     }
   }
 
-  async function SignUpFun() {
+  async function SignUpFun(e) {
+    e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      setEmail("");
-      setPassword("");
-      navigate("/");
+      // setEmail("");
+      // setPassword("");
+      // navigate("/");
     } catch (err) {
       alert(err);
     }
@@ -52,14 +52,6 @@ function LoginPage() {
     try {
       await signInWithPopup(auth, googleProvider);
       navigate("/");
-    } catch (err) {
-      alert(err);
-    }
-  }
-
-  async function LogOutFun() {
-    try {
-      await signOut(auth);
     } catch (err) {
       alert(err);
     }
@@ -95,45 +87,45 @@ function LoginPage() {
             Creating Acount
           </h2>
         )}
-        <label className="mb-2 text-xl font-bold" htmlFor="name">
-          Email:
-        </label>
-        <input
-          className="h-12 px-4 mb-4 border rounded-xl dark:bg-slate-900"
-          placeholder="example@gmail.com"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          id="name"
-        />
-        <label className="mb-2 text-xl font-bold" htmlFor="password">
-          password:
-        </label>
-        <input
-          className="h-12 px-4 mb-4 border rounded-xl dark:bg-slate-900"
-          placeholder="********"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          id="password"
-        />
-        <div className="flex items-baseline justify-end w-full space-x-4">
-          {creatingAcount ? (
+        <form
+          onSubmit={creatingAcount ? SignUpFun : SignInFun}
+          className="flex flex-col"
+        >
+          <label className="mb-2 text-xl font-bold" htmlFor="name">
+            Email:
+          </label>
+          <input
+            className="h-12 px-4 mb-4 border rounded-xl dark:bg-slate-900"
+            placeholder="example@gmail.com"
+            type="email"
+            value={email}
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+            onChange={(e) => setEmail(e.target.value)}
+            id="name"
+            required
+          />
+          <label className="mb-2 text-xl font-bold" htmlFor="password">
+            password:
+          </label>
+          <input
+            className="h-12 px-4 mb-4 border rounded-xl dark:bg-slate-900"
+            placeholder="********"
+            type="password"
+            value={password}
+            minlength="6"
+            onChange={(e) => setPassword(e.target.value)}
+            id="password"
+            required
+          />
+          <div className="flex items-baseline justify-end w-full space-x-4">
             <button
-              onClick={SignUpFun}
+              // onSubmit={SignUpFun}
               className="w-32 h-12 text-white uppercase bg-green-300 rounded-lg"
             >
-              Sign UP
+              {creatingAcount ? "Sign UP" : " Sign In"}
             </button>
-          ) : (
-            <button
-              onClick={SignInFun}
-              className="w-32 h-12 text-white uppercase bg-green-600 rounded-lg"
-            >
-              Sign In
-            </button>
-          )}
-        </div>
+          </div>
+        </form>
         <button
           onClick={SignInWithGoogleFun}
           className="flex items-center justify-center w-full h-12 gap-2 mt-8 border rounded-xl"
